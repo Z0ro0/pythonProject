@@ -1,7 +1,5 @@
 from datetime import datetime
-from database import DatabaseConnection
 from user_management import UserManagement
-
 
 class ReservationManagement:
     def __init__(self, db_connection):
@@ -79,3 +77,25 @@ class ReservationManagement:
                            if str(seat_number) not in reserved_seats]
 
         return available_seats
+
+    def view_reservations(self):
+        self.db_connection.cursor.execute("""
+            SELECT reservationid, roomid, seat, TO_CHAR(reservationdate, 'YYYY-MM-DD'),
+                   TO_CHAR(starttime, 'HH24:MI'), TO_CHAR(endtime, 'HH24:MI')
+            FROM reservation
+            WHERE id = :id
+        """, id=self.current_user_id)
+
+        print("방 번호 | 좌석 번호 | 예약 날짜 | 시작 시간 | 종료 시간 ")
+        print("-" * 52)
+
+        for row in self.db_connection.cursor.fetchall():
+            reservation_id, room_id, seat, reservation_date, start_time, end_time = row
+            room_id_str = room_id or '-'
+            seat_str = seat or '-'
+            reservation_date_str = reservation_date or '-'
+            start_time_str = start_time or '-'
+            end_time_str = end_time or '-'
+            print(f"{room_id_str:^7} | {seat_str:^8} | {reservation_date_str} | {start_time_str} | {end_time_str}")
+
+        print("-" * 52)

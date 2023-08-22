@@ -1,9 +1,6 @@
-from database import DatabaseConnection
-
 class UserManagement:
     def __init__(self, db_connection):
         self.db_connection = db_connection
-        self.current_user_id = None
 
     def register_user(self, id, name, password, pnum):
         self.db_connection.cursor.execute(

@@ -38,8 +38,7 @@ def main():
             pass
 
         elif choice == "5":
-            # 예약 조회 기능 구현
-            pass
+            reservation_system.view_reservations()
 
         elif choice == "6":
             if reservation_system.check_user_logged_in():
