@@ -8,14 +8,21 @@ def main():
     reservation_system = ReservationManagement(db_connection)
 
     while True:
-        print("1. 회원가입")
-        print("2. 로그인")
-        print("3. 예약")
-        print("4. 예약 변경")
-        print("5. 예약 조회")
-        print("6. 문의사항 등록")
-        print("0. 종료")
+
+        print("|     _ __ ___    ___  _ __   _   _      |")
+        print("|    | '_ ` _ \  / _ \| '_ \ | | | |     |")
+        print("|     | | | | | ||  __/| | | || |_| |    |")
+        print("|    |_| |_| |_| \___||_| |_| \__,_|     |")
+        print("|                                        |")
+        print("|  1. 회원가입                             |")
+        print("|  2. 로그인                               |")
+        print("|  3. 예약                                 |")
+        print("|  4. 예약 변경                             |")
+        print("|  5. 예약 조회                             |")
+        print("|  6. 문의사항 등록                          |")
+        print("|  0. 종료                                  |")
         choice = input("원하는 작업 선택: ")
+
 
         if choice == "1":
             id = input("사용자 아이디: ")

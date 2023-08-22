@@ -2,10 +2,13 @@ from datetime import datetime
 from user_management import UserManagement
 
 class ReservationManagement:
+    #예약, 예약 조회, 예약 변경
     def __init__(self, db_connection):
         self.db_connection = db_connection
         self.user_management = UserManagement(self.db_connection)
         self.current_user_id = None
+        
+        #예약 가능한 좌석의 수
         self.available_reservation_seats = {
             '1': 30,
             '2': 50,
@@ -19,6 +22,13 @@ class ReservationManagement:
         return True
 
     def make_reservation(self):
+        #예약 기능
+        #1. 방 선택하기
+        #2. 시간 입력하기
+        #3. 그 시간에 예약할 수 있는 좌석 알려 주기
+        #4. 몇 번 좌석 예약할 건지 입력하기
+        #예외... 그 시간에 예약 불가할 때는... 예외 처리 해 주기
+        #예외... 이미 예약된 좌석일 때는 예약 불가능하게 해 주기
         if not self.check_user_logged_in():
             return
 
@@ -64,6 +74,12 @@ class ReservationManagement:
         print("예약이 완료되었습니다.")
 
     def check_available_seats(self, room_id, reservation_date, reservation_start_time, reservation_end_time):
+        #예약 가능한 좌석인지 확인
+        #방, 날짜, 시간에 예약된 좌석을 조회합니다.
+        #조회된 좌석들 담아주기
+        #가능한 좌석 담아주기
+        #예약 가능한 좌석 반환
+        
         self.db_connection.cursor.execute("""
             SELECT seat FROM reservation
             WHERE roomid = :roomid
@@ -79,6 +95,9 @@ class ReservationManagement:
         return available_seats
 
     def view_reservations(self):
+        #예약 조회 기능
+        #로그인 된 아이디에서 예약한 정보 불러오기
+        #조회된 결과 한 줄씩 가져옴(null -)
         self.db_connection.cursor.execute("""
             SELECT reservationid, roomid, seat, TO_CHAR(reservationdate, 'YYYY-MM-DD'),
                    TO_CHAR(starttime, 'HH24:MI'), TO_CHAR(endtime, 'HH24:MI')
@@ -99,9 +118,13 @@ class ReservationManagement:
             end_time_str = end_time or '-'
             print(f" {reserid} | {room_id_str:^7} | {seat_str:^8} | {reservation_date_str} | {start_time_str} | {end_time_str}")
 
-        print("-" * 52)
+        print("-" * 52)#52번출력
 
     def modify_reservation(self):
+        #예약 변경 기능
+        #예약 조회 기능 긁어와서 그동안 예약한 내역 주르륵 보여주기
+        #예약번호 선택하고 예약 정보 보여주기
+        #시작 시간 끝나는 시간 업데이트 해 주기
             if not self.check_user_logged_in():
                 return
 
