@@ -86,16 +86,84 @@ class ReservationManagement:
             WHERE id = :id
         """, id=self.current_user_id)
 
-        print("방 번호 | 좌석 번호 | 예약 날짜 | 시작 시간 | 종료 시간 ")
+        print(" 예약 ID | 방 번호 | 좌석 번호 | 예약 날짜 | 시작 시간 | 종료 시간 ")
         print("-" * 52)
 
         for row in self.db_connection.cursor.fetchall():
             reservation_id, room_id, seat, reservation_date, start_time, end_time = row
+            reserid = reservation_id or '-'
             room_id_str = room_id or '-'
             seat_str = seat or '-'
             reservation_date_str = reservation_date or '-'
             start_time_str = start_time or '-'
             end_time_str = end_time or '-'
-            print(f"{room_id_str:^7} | {seat_str:^8} | {reservation_date_str} | {start_time_str} | {end_time_str}")
+            print(f" {reserid} | {room_id_str:^7} | {seat_str:^8} | {reservation_date_str} | {start_time_str} | {end_time_str}")
 
         print("-" * 52)
+
+    def modify_reservation(self):
+            if not self.check_user_logged_in():
+                return
+
+            self.db_connection.cursor.execute("""
+                        SELECT reservationid, roomid, seat, TO_CHAR(reservationdate, 'YYYY-MM-DD'),
+                               TO_CHAR(starttime, 'HH24:MI'), TO_CHAR(endtime, 'HH24:MI')
+                        FROM reservation
+                        WHERE id = :id
+                    """, id=self.current_user_id)
+
+            print(" 예약 ID | 방 번호 | 좌석 번호 | 예약 날짜 | 시작 시간 | 종료 시간 ")
+            print("-" * 52)
+
+            for row in self.db_connection.cursor.fetchall():
+                reservation_id, room_id, seat, reservation_date, start_time, end_time = row
+                reserid = reservation_id or '-'
+                room_id_str = room_id or '-'
+                seat_str = seat or '-'
+                reservation_date_str = reservation_date or '-'
+                start_time_str = start_time or '-'
+                end_time_str = end_time or '-'
+                print(
+                    f" {reserid} | {room_id_str:^7} | {seat_str:^8} | {reservation_date_str} | {start_time_str} | {end_time_str}")
+
+            print("-" * 52)
+
+            reservation_id = input("변경할 예약 ID: ")
+
+            # Check if the reservation belongs to the current user
+            self.db_connection.cursor.execute("""
+                    SELECT roomid, seat, reservationdate, starttime, endtime
+                    FROM reservation
+                    WHERE id = :id
+                    AND reservationid = :reservationid
+                """, id=self.current_user_id, reservationid=reservation_id)
+
+            row = self.db_connection.cursor.fetchone()
+
+            if not row:
+                print("해당 예약 정보를 찾을 수 없거나 권한이 없습니다.")
+                return
+
+            room_id, seat, reservation_date, start_time, end_time = row
+
+            print("현재 예약 정보:")
+            print(f"방 번호: {room_id}")
+            print(f"좌석 번호: {seat}")
+            print(f"예약 날짜: {reservation_date}")
+            print(f"시작 시간: {start_time}")
+            print(f"종료 시간: {end_time}")
+
+            new_start_time = input("새로운 시작 시간 (HH:MM): ")
+            new_end_time = input("새로운 종료 시간 (HH:MM): ")
+
+            self.db_connection.cursor.execute("""
+                UPDATE reservation
+                SET starttime = TO_TIMESTAMP(:new_start_time, 'HH24:MI'),
+                    endtime = TO_TIMESTAMP(:new_end_time, 'HH24:MI')
+                WHERE id = :id
+                AND reservationid = :reservationid
+            """, new_start_time=new_start_time, new_end_time=new_end_time,
+                id=self.current_user_id, reservationid=reservation_id)
+
+            self.db_connection.connection.commit()
+            print("예약 정보가 변경되었습니다.")

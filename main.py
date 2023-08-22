@@ -34,8 +34,7 @@ def main():
             reservation_system.make_reservation()
 
         elif choice == "4":
-            # 예약 변경 기능 구현
-            pass
+            reservation_system.modify_reservation()
 
         elif choice == "5":
             reservation_system.view_reservations()
