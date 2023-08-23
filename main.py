@@ -2,6 +2,8 @@ from datetime import datetime
 from database import DatabaseConnection
 from reservation import ReservationManagement
 from user_management import UserManagement
+from suggestion import submit_suggestion
+
 
 def main():
     db_connection = DatabaseConnection("reservation", "1234", "127.0.0.1", "1521", "XE")
@@ -49,7 +51,7 @@ def main():
         elif choice == "6":
             if reservation_system.check_user_logged_in():
                 suggestion_content = input("문의 내용 : ")
-                reservation_system.db_connection.submit_suggestion(suggestion_content)
+                submit_suggestion(reservation_system, suggestion_content)
             else:
                 print("로그인 필요")
 
