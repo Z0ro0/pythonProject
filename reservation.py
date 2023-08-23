@@ -153,12 +153,10 @@ class ReservationManagement:
 
             reservation_id = input("변경할 예약 ID: ")
 
-            # Check if the reservation belongs to the current user
+            #다른 사람의 예약 정보를 바꿀 수 없도록 하는 코드
             self.db_connection.cursor.execute("""
-                    SELECT roomid, seat, reservationdate, starttime, endtime
-                    FROM reservation
-                    WHERE id = :id
-                    AND reservationid = :reservationid
+                    SELECT roomid, seat, reservationdate, starttime, endtime FROM reservation
+                    WHERE id = :id AND reservationid = :reservationid
                 """, id=self.current_user_id, reservationid=reservation_id)
 
             row = self.db_connection.cursor.fetchone()
@@ -181,10 +179,8 @@ class ReservationManagement:
 
             self.db_connection.cursor.execute("""
                 UPDATE reservation
-                SET starttime = TO_TIMESTAMP(:new_start_time, 'HH24:MI'),
-                    endtime = TO_TIMESTAMP(:new_end_time, 'HH24:MI')
-                WHERE id = :id
-                AND reservationid = :reservationid
+                SET starttime = TO_TIMESTAMP(:new_start_time, 'HH24:MI'), endtime = TO_TIMESTAMP(:new_end_time, 'HH24:MI')
+                WHERE id = :id AND reservationid = :reservationid
             """, new_start_time=new_start_time, new_end_time=new_end_time,
                 id=self.current_user_id, reservationid=reservation_id)
 

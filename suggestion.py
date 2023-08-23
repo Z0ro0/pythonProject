@@ -5,7 +5,7 @@ def submit_suggestion(reservation_system, suggestion_content):
     if not reservation_system.check_user_logged_in():
         return
 
-    # 로그인된 사용자의 이름을 이용하여 사용자 ID 가져오기
+    # 로그인된 사용자 ID 가져오기
     reservation_system.db_connection.cursor.execute("SELECT id FROM userinfo WHERE id = :id",
                                                     id=reservation_system.current_user_id)
     row = reservation_system.db_connection.cursor.fetchone()
