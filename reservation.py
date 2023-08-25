@@ -34,7 +34,7 @@ class ReservationManagement:
 
         print("1. 1번 방 - 코워킹스페이스 (30자리)")
         print("2. 2번 방 - 도서관 (50자리)")
-        print("3. 3번 방 - 도서관 (60자리)")
+        print("3. 3번 방 - 상상카페2 (60자리)")
         room_id = input("예약할 방: ")
 
         if room_id not in self.available_reservation_seats:
