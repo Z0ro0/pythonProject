@@ -1,5 +1,6 @@
-from datetime import datetime
+import datetime
 from user_management import UserManagement
+from PIL import Image
 
 class ReservationManagement:
     #예약, 예약 조회, 예약 변경
@@ -33,8 +34,15 @@ class ReservationManagement:
             return
 
         print("1. 1번 방 - 코워킹스페이스 (30자리)")
+        img = Image.open('coworking.png')
+        img.show()
         print("2. 2번 방 - 도서관 (50자리)")
+        img1 = Image.open('library.png.png')
+        img1.show()
         print("3. 3번 방 - 상상카페2 (60자리)")
+        img2 = Image.open('imaginecafe.png.png')
+        img2.show()
+
         room_id = input("예약할 방: ")
 
         if room_id not in self.available_reservation_seats:
@@ -44,7 +52,7 @@ class ReservationManagement:
         pmax = self.available_reservation_seats[room_id]
         print(f"{room_id}번 방은 총 {pmax}개의 자리가 있습니다.")
 
-        today_date = datetime.now().date().strftime('%Y-%m-%d')
+        today_date = datetime.datetime.now().date().strftime('%Y-%m-%d')
         reservation_start_time = input("예약 시작 시간 (HH:MM): ")
         reservation_end_time = input("예약 종료 시간 (HH:MM): ")
 
